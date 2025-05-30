@@ -1,12 +1,12 @@
 module "vpc" {
   source = "./modules/vpc"
 
-  vpc_cidr_block      = var.vpc_cidr_block
-  public_subnet_cidr  = "10.0.1.0/24"
-  private_subnet_cidr = "10.0.2.0/24"
-  public_az           = "ap-south-1a"
-  private_az          = "ap-south-1b"
-  vpc_name            = "interior-vpc"
+  vpc_cidr_block        = var.vpc_cidr_block
+  public_subnet_cidrs   = var.public_subnet_cidrs
+  private_subnet_cidr   = var.private_subnet_cidr
+  public_azs            = var.public_azs
+  private_az            = var.private_az
+  vpc_name              = var.vpc_name
 }
 
 module "iam" {
@@ -19,8 +19,14 @@ module "security_group" {
 }
 
 module "ec2" {
-  source              = "./modules/ec2"
-  subnet_id           = module.vpc.public_subnet_id
-  iam_role            = module.iam.ec2_iam_role_name
-  security_group_ids  = [module.security_group.security_group_id]
+  for_each = {
+    subnet1 = "subnet-0ac202668d055d0b9"
+    subnet2 = "subnet-0b65380fdd73d5351"
+  }
+
+  source = "./modules/ec2"
+  subnet_id = each.value
+  security_group_ids = ["sg-0f886bd2508cfb265"]
+  iam_role = "intern-ec2-role"
+  
 }

@@ -1,3 +1,8 @@
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = var.instance_profile_name
+  role = var.iam_role
+}
+
 resource "aws_instance" "web" {
   ami                         = var.ami
   instance_type               = var.instance_type
@@ -11,9 +16,4 @@ resource "aws_instance" "web" {
   tags = {
     Name = var.instance_name
   }
-}
-
-resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "intern-ec2-profile"
-  role = var.iam_role
 }

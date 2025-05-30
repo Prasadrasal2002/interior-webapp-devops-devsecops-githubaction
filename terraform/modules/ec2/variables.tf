@@ -36,3 +36,9 @@ variable "iam_role" {
   description = "IAM Role name for EC2 instance profile"
   type        = string
 }
+
+variable "instance_profile_name" {
+  description = "Unique name for the IAM instance profile"
+  type        = string
+  default     = "intern-ec2-profile"
+}
