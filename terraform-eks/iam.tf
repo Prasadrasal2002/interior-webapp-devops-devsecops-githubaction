@@ -21,6 +21,11 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_AmazonEKSClusterPolicy" {
   role       = aws_iam_role.eks_cluster_role.name
 }
 
+resource "aws_iam_role_policy_attachment" "eks_cluster_CloudWatchLogsFullAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
+  role       = aws_iam_role.eks_cluster_role.name
+}
+
 # --------------------------------------------
 # EKS Node Group Role
 # --------------------------------------------
