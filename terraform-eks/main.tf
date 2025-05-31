@@ -13,7 +13,12 @@ resource "aws_eks_cluster" "eks" {
     endpoint_private_access = false
   }
 
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy]
+  enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.eks_cluster_CloudWatchLogsFullAccess
+  ]
 }
 
 # EKS Node Group Resource
