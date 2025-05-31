@@ -1,0 +1,15 @@
+#CICD
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, feature/* ]
+
+jobs:
+  build-and-deploy:
+    runs-on: [ self-hosted ]
+
+    steps:
+
+    - name: Checkout Code
+      uses: actions/checkout@v3
