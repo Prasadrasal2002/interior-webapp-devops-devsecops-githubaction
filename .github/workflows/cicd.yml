@@ -56,8 +56,3 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f ./k8s/
-
-      # 9. (Optional) Set image to latest
-      - name: Set latest Docker image to deployment
-        run: |
-          kubectl set image deployment/interior-web-app interior-web-app=devopscode44/interior-web-app:latest
