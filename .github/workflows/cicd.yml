@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted  # Your self-hosted runner (e.g. EC2)
+    runs-on: [ self-hosted ]  # self-hosted runner (e.g. EC2)
 
     steps:
       # 1. Checkout code - Checkout the branch that triggered the run
