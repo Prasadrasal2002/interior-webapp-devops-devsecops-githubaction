@@ -3,17 +3,16 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
-      - 'feature/*'
-      
+      - feature/docker-setup
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: [ self-hosted ]
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          ref: feature/docker-setup   # Checkout this branch explicitly
 
-    - name: Build Docker Image
-      run: |
-        docker build -t interior-web-app:latest -f feature/docker-setup/Dockerfile .
+      - name: Build Docker image
+        run: docker build -t interior-web-app:latest .
+
