@@ -44,7 +44,21 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1 
+          aws-region: ap-south-1
+
+      # 7. update kubeconfig
+      - name: Update kubeconfig for EKS cluster
+        run: aws eks update-kubeconfig --region ap-south-1 --name interior-app-eks
+
+      # 8. update iamge
+      - name: Update deployment image on EKS
+        run: |
+          kubectl set image deployment/interior-web-app interior-web-app=${{ secrets.DOCKER_USERNAME }}/interior-web-app:latest
+
+      # 9. apply manifests
+      - name: Apply Kubernetes manifests from k8s folder
+        run: |
+          kubectl apply -f k8s/
           
      
 
