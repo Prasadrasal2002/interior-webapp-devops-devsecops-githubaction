@@ -11,7 +11,7 @@ jobs:
     runs-on: [ self-hosted ]  # self-hosted runner (e.g. EC2)
 
     steps:
-      # 1. Checkout code - Checkout the branch that triggered the run
+      # 1. Checkout code - Checkout the feature/docker-setup branch that triggered the run
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -31,3 +31,21 @@ jobs:
       # 4. Push Docker image to Docker Hub
       - name: Push Docker image
         run: docker push devopscode44/interior-web-app:latest
+
+      # 5. Checkout code - Checkout the feature/k8s-deployment branch that triggered the run
+      - name: Checkout k8s manifests from feature/k8s-deployment branch
+        uses: actions/checkout@v3
+        with:
+          ref: feature/k8s-deployment
+
+      # 6. aws configure
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ap-south-1 
+          
+     
+
+        
