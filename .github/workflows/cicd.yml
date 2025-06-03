@@ -49,7 +49,7 @@ jobs:
       # 7. Update kubeconfig to connect to EKS cluster
       - name: Setup kubeconfig for EKS
         run: |
-          aws eks update-kubeconfig --name your-cluster-name --region ap-south-1
+          aws eks update-kubeconfig --name interior-app-eks --region ap-south-1
 
       # 8. Apply Kubernetes manifests
       - name: Deploy to Kubernetes
