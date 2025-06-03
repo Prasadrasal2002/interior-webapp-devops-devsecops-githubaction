@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/docker-setup
+      - feature/k8s-deployment
 
 jobs:
   build-and-deploy:
