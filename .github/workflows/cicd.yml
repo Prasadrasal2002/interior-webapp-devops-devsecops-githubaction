@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - feature/docker-setup
-
+      
 jobs:
   build:
     runs-on: [ self-hosted ]
