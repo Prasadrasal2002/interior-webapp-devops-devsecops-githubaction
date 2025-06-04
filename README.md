@@ -936,6 +936,23 @@ Go to Your Repository Settings > Secrets and variables > Actions > New repositor
 
 
 
+**Create self hosted runner:**
+
+
+
+
+Repo-Settings > Actions > Runners > New self hosted runner > Select runner image > and run the commands
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/0619dcc0-117f-4761-9056-31110da5d2ba)
+
+
+
+
+
 
 **Secrets:**
 ![image](https://github.com/user-attachments/assets/c27ff11f-7a63-42cf-95ae-084e0edebb5a)
