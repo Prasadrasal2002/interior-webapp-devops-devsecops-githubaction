@@ -3,13 +3,13 @@ variable "cluster_name" {
 }
 
 variable "vpc_id" {
-  default = "vpc-09b909a4583503277"
+  default = "vpc-06d8efa5574044b7d"
 }
 
 variable "subnet_ids" {
   default = [
-    "subnet-0ac202668d055d0b9",  # ap-south-1a
-    "subnet-02a56f681bb728d0f"  # ap-south-1b
+    "subnet-072306895e53d0320",  # ap-south-1a
+    "subnet-099bb50e17c452a9b"  # ap-south-1b
     
   ]
 }
