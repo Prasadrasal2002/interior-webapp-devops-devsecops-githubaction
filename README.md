@@ -1,3 +1,11 @@
+```bash
+# PHASE 1
+```
+
+
+
+
+
 # 🏠 InteriorDesignPro
 
 A modern and elegant web application for showcasing interior design projects. Built using **Flask**, **HTML/CSS**, and **Bootstrap**, this app allows users to explore featured projects, learn about services, and get in touch via a contact form.
@@ -733,6 +741,15 @@ minikube service flask-service
 
 
 ![image](https://github.com/user-attachments/assets/95616fa7-07b3-43c1-874e-23ba176bea45)
+
+
+
+
+
+
+```bash
+# PHASE 2
+```
 
 
 
