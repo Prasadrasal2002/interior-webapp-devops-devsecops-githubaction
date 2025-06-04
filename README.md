@@ -1017,6 +1017,18 @@ jobs:
 
 
 
+![image](https://github.com/user-attachments/assets/f3429e6a-b8d1-4e00-9eef-63f7bf3a580a)
+
+
+
+
+![image](https://github.com/user-attachments/assets/b9590b07-955d-4820-8135-cbdae63469c6)
+
+
+
+
+
+
 **View Pods**
 ```bash
 kubectl get pods
