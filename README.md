@@ -1,6 +1,4 @@
-```bash
 # PHASE 1
-```
 
 
 
@@ -747,9 +745,9 @@ minikube service flask-service
 
 
 
-```bash
+
 # PHASE 2
-```
+
 
 
 
