@@ -471,9 +471,15 @@ docker build -t interior-web-app:latest .
 
 22. **List Docker Images:**
 
+
+
+
+
 ```bash
 docker images
 ```
+
+
 
 
 ![image](https://github.com/user-attachments/assets/4dc6f469-7e14-4b14-ab32-c00cbd99e6c3)
@@ -483,10 +489,16 @@ docker images
 
 
 23. **Run the container:**
+
+
+
+
       
 ```bash
 docker run -itd -p 5000:5000 interior-web-app:latest
 ```
+
+
 
 
 ![image](https://github.com/user-attachments/assets/96fff6d3-d182-400e-996b-ac3b03bfef27)
@@ -497,18 +509,27 @@ docker run -itd -p 5000:5000 interior-web-app:latest
 
 **Verify Running Containers:**
 
+
+
+
+
 ```bash
 docker ps
 ```
 
 
+
+
 ![image](https://github.com/user-attachments/assets/3aff6893-d57c-4f59-9d11-3020c75617c5)
+
 
 
     
 
 
 23. **Docker Login:**
+
+
 
 
 ![image](https://github.com/user-attachments/assets/4d4df858-8fb8-4bd2-926d-db706e609957)
@@ -519,10 +540,16 @@ docker ps
 
 24. **Push to DockerHub:**
 
+
+
+
+
 ```bash
 docker tag interior-web-app:latest devopscode44/interior-web-app:v1
 docker push devopscode44/flask-app:v1
 ```
+
+
 
 
 ![image](https://github.com/user-attachments/assets/d0f3ea3a-f53b-404c-9c22-05799713e395)
@@ -532,6 +559,9 @@ docker push devopscode44/flask-app:v1
 
 
 25. **DockerHub Dashboard:**
+
+
+
 
 
 ![image](https://github.com/user-attachments/assets/790610e7-6c85-48d8-953d-96508a3d62a5)
@@ -549,6 +579,8 @@ docker rm Container-ID
 ```
 
 
+
+
 ![image](https://github.com/user-attachments/assets/8b51e210-1f8f-4815-ac93-b2e823457a3c)
 
 
@@ -558,13 +590,27 @@ docker rm Container-ID
 
 ## Kubernetes Deployment
 
+
+
+
 25. **Created a dedicated feature branch for Deployment of the Flask application.**
+
+
+
+
 
 ```bash
 git checkout -b feature/k8s-deployment
 ```
 
+
+
+
 26. **Kubernetes Manifests (in /k8s folder)**
+
+
+
+
     
     deployment.yml: Defines the Flask app deployment
 
@@ -577,16 +623,23 @@ git checkout -b feature/k8s-deployment
 
 
 
+
+
     ![image](https://github.com/user-attachments/assets/2ccf58eb-0c0e-42b2-bcf0-688dd3f24059)
 
     
 
 
 
-28. **Deploying to Kubernetes**
+27. **Deploying to Kubernetes**
+
+
 
 
 1) **Apply deployment:**
+
+
+
 
 
 ```bash
@@ -594,24 +647,47 @@ cd k8s
 kubectl apply -f deployment.yml
 ```
 
+
+
+
+
 2) **Apply service:**
+
+
+
+
 
 ```bash
 kubectl apply -f /service.yaml
 ```
 
+
+
+
 3) **Apply configmap**
+
+
+
+
 
 ```bash
 kubectl apply -f configmap.yml
 ```
 
 
+
+
+
 4) **Verify pods and service:**
+
+
+
 
 ```bash
 kubectl get deployment
 ```
+
+
 
 
 ![image](https://github.com/user-attachments/assets/41268d85-a168-41da-be5a-c339d19d919c)
@@ -625,6 +701,8 @@ kubectl get svc
 ```
 
 
+
+
 ![image](https://github.com/user-attachments/assets/4fc928f0-cef7-471c-8a1e-9370b16f9551)
 
 
@@ -636,7 +714,10 @@ kubectl get configmap
 ```
 
 
+
+
 ![image](https://github.com/user-attachments/assets/5554be24-2b49-4197-a2dc-13be2084ef55)
+
 
 
 
@@ -649,14 +730,19 @@ minikube service flask-service
 ```
 
 
+
+
 ![image](https://github.com/user-attachments/assets/95616fa7-07b3-43c1-874e-23ba176bea45)
 
 
 
-29. ## Establishing CI/CD Workflows
+
 
 
 29. ## Terraform Infrastructure Setup for EKS
+
+
+
 
        
 ```bash
@@ -664,6 +750,9 @@ git checkout -b feature/terraform-setup
 
 mkdir  terraform-eks
 ```
+
+
+
 
 **create Terraform files :**
 
@@ -680,7 +769,12 @@ terraform-eks/
 
 
 
+
+
 i) **Initialize Terraform**
+
+
+
 
 
 ```bash
@@ -688,6 +782,7 @@ cd terraform-eks
        
 terraform init
 ```
+
 
 
 
@@ -699,6 +794,7 @@ terraform plan
 
 
 
+
 iii) **Apply the Configuration**
         
 ```bash
@@ -707,11 +803,14 @@ terraform apply
 
 
 
+
 EKS Cluster:
 
 
 
+
 ![image](https://github.com/user-attachments/assets/c9b6c669-d44e-458d-8b39-9f2fbe570b1b)
+
 
        
 
@@ -719,11 +818,18 @@ EKS Cluster:
 30. ## AWS ALB Ingress on Kubernetes
 
 
+
+
+
 1) **Download the IAM Policy JSON File**
 
 ```bash
 curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
 ```
+
+
+
+
 
 
 2)  **Create the IAM Policy using AWS CLI**
@@ -735,6 +841,10 @@ aws iam create-policy \
 
 ```
 
+
+
+
+
 3) **Associate IAM OIDC Provider with EKS Cluster**
 
 ```bash
@@ -744,7 +854,14 @@ eksctl utils associate-iam-oidc-provider \
   --approve
 ```
 
+
+
+
+
 4) **Create IAM Service Account and Attach Policy**
+
+
+
 
 
 ```bash
@@ -757,7 +874,13 @@ eksctl create iamserviceaccount \
   --override-existing-serviceaccounts
 ```
 
+
+
+
+
 5) **Download & Install AWS Load Balancer Controller using Helm**
+
+
 
 
 ```bash
@@ -776,7 +899,15 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set image.repository=602401143452.dkr.ecr.ap-south-1.amazonaws.com/amazon/aws-load-balancer-controller
 ```
 
+
+
+
+
 6) **Verify Installation**
+
+
+
+
 
 ```bash
 kubectl get deployment -n kube-system aws-load-balancer-controller
@@ -784,9 +915,305 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
 
 
+
+
 ![image](https://github.com/user-attachments/assets/fc335f84-8b0f-41e0-82f5-a4d5156feaa4)
 
 
+
+
+
+ ## Establishing CI/CD Workflows
+
+
+
+ 
+31. **Setting up GitHub Secrets for CI/CD**
+
+steps:
+Go to Your Repository Settings > Secrets and variables > Actions > New repository secret
+
+
+
+
+
+**Secrets:**
+![image](https://github.com/user-attachments/assets/c27ff11f-7a63-42cf-95ae-084e0edebb5a)
+
+
+
+
+ 
+32. **CI/CD Workflow using GitHub Actions**
+
+
+```bash
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - feature/docker-setup
+      - feature/k8s-deployment
+
+jobs:
+  build-and-deploy:
+    runs-on: [ self-hosted ]  # EC2 self-hosted runner
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          ref: feature/docker-setup
+
+      # 2. Docker login
+      - name: Docker Hub Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 3. Build Docker image
+      - name: Build Docker Image
+        run: docker build -t devopscode44/interior-web-app:latest .
+
+      # 4. Push Docker image to Docker Hub
+      - name: Push Docker Image
+        run: docker push devopscode44/interior-web-app:latest
+
+      # 5. Checkout Kubernetes deployment manifests
+      - name: Checkout k8s manifests
+        uses: actions/checkout@v3
+        with:
+          ref: feature/k8s-deployment  # or same branch if combined
+
+      # 6. Configure AWS credentials for EKS
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      # 7. Update kubeconfig to connect to EKS cluster
+      - name: Setup kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig --name interior-app-eks --region ap-south-1
+
+      # 8. Apply Kubernetes manifests
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f ./k8s/
+```
+
+
+
+
+![image](https://github.com/user-attachments/assets/3f770adb-8540-4be6-84a3-d09c854e4d96)
+
+
+
+
+
+**View Pods**
+```bash
+kubectl get pods
+```
+
+
+
+![image](https://github.com/user-attachments/assets/3cce3813-ed69-446e-bb1a-0c4f85110e45)
+
+
+
+
+
+**View Services:**
+This command lists all the services (LoadBalancer, ClusterIP, NodePort) in the current namespace.
+```bash
+kubectl get svc
+```
+
+
+
+
+![image](https://github.com/user-attachments/assets/3bc65da6-7b2d-4b5d-b4a1-1d909b0520b0)
+
+
+
+
+
+**View Ingress**
+This command displays ingress resources, which are used to expose services over HTTP(S).
+```bash
+kubectl get ingress
+```
+
+
+
+
+![image](https://github.com/user-attachments/assets/31dd6f5a-930d-4a4e-8bcc-9ab5bf6c14e4)
+
+
+
+
+
+**Load balanncer:**
+
+
+
+
+![image](https://github.com/user-attachments/assets/6dc11ce0-62dc-4ffd-a2c7-4b2bd713a449)
+
+
+
+
+
+
+33. ## Monitoring EKS with Amazon CloudWatch
+
+
+
+
+
+**Create IAM Policy for CloudWatch Agent:**
+
+
+
+
+
+```bash
+curl -O https://raw.githubusercontent.com/aws/containers-roadmap/main/preview-programs/cloudwatch-container-insights/cloudwatch-agent-iam-policy.json
+
+aws iam create-policy \
+  --policy-name CloudWatchAgentServerPolicy \
+  --policy-document file://cloudwatch-agent-iam-policy.json
+```
+
+
+
+
+**Attach Policy to Node IAM Role**
+
+**Get the node IAM role:**
+```bash
+aws eks describe-nodegroup \
+  --cluster-name interior-app-eks \
+  --nodegroup-name prasad-node-group \
+  --query "nodegroup.nodeRole" \
+  --output text
+```
+
+
+
+
+**Attach the policy to the role (example role name: eks-node-role):**
+
+
+
+
+```bash
+aws iam attach-role-policy \
+  --role-name eks-node-role \
+  --policy-arn arn:aws:iam::<your-account-id>:policy/CloudWatchAgentServerPolicy
+```
+
+
+
+
+34. ## Install CloudWatch Metrics Agent via Helm
+
+
+
+
+```bash
+helm repo add eks https://aws.github.io/eks-charts
+
+helm upgrade --install cloudwatch-agent eks/aws-cloudwatch-metrics \
+  --namespace amazon-cloudwatch \
+  --create-namespace \
+  --set clusterName=interior-app-eks \
+  --set awsRegion=ap-south-1 \
+  --set serviceAccount.create=true \
+  --set serviceAccount.name=cloudwatch-agent
+```
+
+
+
+
+**Verify Installation**
+
+
+
+
+
+```bash
+kubectl get pods -n amazon-cloudwatch
+```
+
+
+
+![image](https://github.com/user-attachments/assets/ec05d81e-2fa2-4bc9-9544-591ab0013eab)
+
+
+
+
+
+35. ## CloudWatch Outputs in AWS Console
+
+
+
+
+**Performance:**
+
+
+
+
+![image](https://github.com/user-attachments/assets/a74979e9-35f4-4510-b721-cdfa0b9cf6c5)
+
+
+
+
+**Cluster Performance monitoring**
+
+
+
+
+![image](https://github.com/user-attachments/assets/3b9b144a-d3eb-4796-9fcc-fa78b786733e)
+
+
+
+
+
+**Log Groups**
+
+
+
+
+![image](https://github.com/user-attachments/assets/fbad1f54-5732-4af0-8211-f8e7dbfa05fb)
+
+
+
+
+
+36. ## Accessing the Application via ALB Ingress (AWS Load Balancer Controller)
+
+This project uses AWS ALB Ingress Controller to expose the Kubernetes service externally via a secure and scalable Application Load Balancer.
+
+
+![image](https://github.com/user-attachments/assets/ca7bda1f-f046-4856-97ee-feb502b6b53f)
+
+
+
+
+**Accessing the Application**
+
+
+
+
+![image](https://github.com/user-attachments/assets/5e4d8c07-967e-411a-8946-80470b18213d)
 
 
 
