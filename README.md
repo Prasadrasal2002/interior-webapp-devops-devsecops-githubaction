@@ -771,6 +771,13 @@ terraform-eks/
 
 
 
+![image](https://github.com/user-attachments/assets/b3dce3b6-c188-4351-b6f6-aeff68b6d2af)
+
+
+
+
+
+
 i) **Initialize Terraform**
 
 
