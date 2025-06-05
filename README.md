@@ -1270,6 +1270,207 @@ This project uses AWS ALB Ingress Controller to expose the Kubernetes service ex
 
 
 
+
+
+37. ## deploy Prometheus & Grafana on Minikube
+
+
+
+
+
+
+**Create a Namespace**
+
+
+
+
+
+```bash
+kubectl create namespace monitoring
+```
+
+
+
+
+**Deploy Prometheus and Grafana Using kube-prometheus-stack**
+
+
+
+
+
+**Add Helm Repo**
+```bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+```
+
+
+
+
+
+**Install the kube-prometheus-stack**
+```bash
+helm install prometheus prometheus-community/kube-prometheus-stack \
+  --namespace monitoring
+```
+
+
+
+
+
+**Verify Installation**
+
+
+
+
+
+```bash
+kubectl get pods -n monitoring
+```
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/1d03d6eb-fafc-462d-8fa4-882a5f1d17dc)
+
+
+
+
+
+
+38. ## Access Prometheus and Grafana UI
+
+
+
+
+
+
+
+**Prometheus:**
+```bash
+kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090 -n monitoring
+```
+
+
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/0881f2fb-cb5e-45cb-8cb1-103e3674281e)
+
+
+
+
+
+
+
+Access: http://localhost:9090
+
+
+
+
+
+
+**Prometheus metrics outputs:**
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/525582d6-26c5-44b1-bc9b-9f97738320ca)
+
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/3011cf28-5709-4e7e-8bf0-6e9fa42a537d)
+
+
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/bde75b75-f40a-4159-a021-7ae555bd7b34)
+
+
+
+
+
+
+
+
+
+
+**Grafana:**
+```bash
+kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
+```
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/4b2dc452-85fb-49fb-80c2-630d1c808e42)
+
+
+
+
+
+
+
+Access: http://localhost:3000
+Default credentials:
+Username: admin
+Password: prom-operator
+
+
+
+
+
+
+**Grafana Dashboard:**
+
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/a3f8ab57-6430-4d24-98d7-d35d5e495186)
+
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/432462a7-80c4-4e47-b06d-3062e293d70f)
+
+
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/e938ab97-f5f2-4b8c-aab3-d8ccbd680434)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
 ## 🤝 Contributing
