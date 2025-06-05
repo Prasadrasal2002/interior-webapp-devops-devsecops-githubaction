@@ -36,7 +36,7 @@ A modern and elegant web application for showcasing interior design projects. Bu
 
 
 
-## Cloud Deployment Architecture
+## Cloud Deployment Architecture:
 
 
 
