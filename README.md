@@ -1423,9 +1423,30 @@ kubectl port-forward svc/prometheus-grafana 3000:80 -n monitoring
 
 
 Access: http://localhost:3000
+Login to Grafana-:
 Default credentials:
 Username: admin
 Password: prom-operator
+
+
+
+
+
+
+
+**Data Sources** > Click on the gear icon (⚙️) in the left sidebar.
+Select Data Sources > Add data source. > Choose data source (e.g., Prometheus). > Enter the URL e.g. http://localhost:9090 for Prometheus. >  Save & Test
+
+
+
+
+
+
+
+**Dashboard Import** > click + > Import > Enter Dashboard ID eg 1860 > Click Load >  Select Prometheus as Data Source > Import
+
+
+
 
 
 
@@ -1455,15 +1476,6 @@ Password: prom-operator
 
 
 ![image](https://github.com/user-attachments/assets/e938ab97-f5f2-4b8c-aab3-d8ccbd680434)
-
-
-
-
-
-
-
-
-
 
 
 
