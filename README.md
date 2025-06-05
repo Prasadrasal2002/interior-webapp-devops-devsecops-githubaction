@@ -21,6 +21,37 @@ A modern and elegant web application for showcasing interior design projects. Bu
 
 ---
 
+## Local Testing Architecture:
+
+
+
+
+
+![WhatsApp Image 2025-06-05 at 5 18 21 PM](https://github.com/user-attachments/assets/f9d14711-19c9-4ad2-afc4-5ff3f57cd3fc)
+
+
+
+
+
+
+
+## Cloud Deployment Architecture
+
+
+
+
+
+
+
+![WhatsApp Image 2025-06-05 at 5 12 15 PM](https://github.com/user-attachments/assets/f54b8a8a-93dd-4c04-bd15-6f42f9457da9)
+
+
+
+
+
+
+
+
 ## 🚀 Features
 
 - 🖼️ Hero section with dynamic image
