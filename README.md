@@ -27,7 +27,8 @@ A modern and elegant web application for showcasing interior design projects. Bu
 
 
 
-![WhatsApp Image 2025-06-05 at 5 18 21 PM](https://github.com/user-attachments/assets/f9d14711-19c9-4ad2-afc4-5ff3f57cd3fc)
+![image](https://github.com/user-attachments/assets/21c349be-18f8-479f-b6cb-5b8a8fa9f782)
+
 
 
 
@@ -43,7 +44,8 @@ A modern and elegant web application for showcasing interior design projects. Bu
 
 
 
-![WhatsApp Image 2025-06-05 at 5 12 15 PM](https://github.com/user-attachments/assets/f54b8a8a-93dd-4c04-bd15-6f42f9457da9)
+![image](https://github.com/user-attachments/assets/b846a289-b138-4ee1-a72e-30016f7e82f8)
+
 
 
 
