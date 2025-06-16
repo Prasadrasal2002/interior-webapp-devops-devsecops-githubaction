@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/64f7f7b7-3d43-4fa6-acb9-53ad09e4fc49)![image](https://github.com/user-attachments/assets/64f7f7b7-3d43-4fa6-acb9-53ad09e4fc49)# PHASE 1
+# PHASE 1
 
 
 
@@ -43,7 +43,8 @@ A modern and elegant web application for showcasing interior design projects. Bu
 
 
 
-![image](https://github.com/user-attachments/assets/398ad286-b073-4309-8260-5b868d02cd99)
+![image](https://github.com/user-attachments/assets/59f837d2-19b9-4bf0-b9d9-b620e1885984)
+
 
 
 
