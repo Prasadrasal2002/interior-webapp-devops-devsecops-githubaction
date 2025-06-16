@@ -43,7 +43,8 @@ A modern and elegant web application for showcasing interior design projects. Bu
 
 
 
-![image](https://github.com/user-attachments/assets/59f837d2-19b9-4bf0-b9d9-b620e1885984)
+![image](https://github.com/user-attachments/assets/8056dc23-2677-4e0a-89f4-f967dbefee7b)
+
 
 
 
