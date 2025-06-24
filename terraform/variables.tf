@@ -39,3 +39,9 @@ variable "vpc_name" {
   type        = string
   default     = "interior-vpc"
 }
+
+variable "ec2_key_name" {
+  description = "Name of the EC2 Key Pair to use for SSH access"
+  type        = string
+}
+
