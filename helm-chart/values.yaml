@@ -1,5 +1,7 @@
 replicaCount: 2
 
+containerPort: 5000
+
 image:
   repository: devopscode44/interior-web-app
   pullPolicy: IfNotPresent
