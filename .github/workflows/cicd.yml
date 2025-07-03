@@ -68,8 +68,10 @@ jobs:
         ./dc/dependency-check/bin/dependency-check.sh \
           --project "interior-web-app" \
           --scan . \
-          --format "HTML" \
-          --out ./reports
+          --format "ALL" \
+          --out ./reports \
+          --disableAssembly
+
 
     # 8. Trivy File System Scan
     - name: Trivy File System Scan
