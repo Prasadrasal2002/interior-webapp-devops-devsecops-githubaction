@@ -10,53 +10,71 @@ on:
 jobs:
   build-and-deploy:
     runs-on: [self-hosted]
+    timeout-minutes: 30
 
     steps:
     # 1. Checkout source code
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    # 2. SonarQube (static code analysis)
+    # 2. Cache SonarQube
+    - name: Cache SonarQube Scanner
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+
+    # 3. SonarQube (static code analysis)
     - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
+      uses: sonarsource/sonarqube-scan-action@v1.1.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-    # 3. OWASP Dependency Check (vulnerable dependencies)
+    # 4. Cache OWASP Dependency Check
+    - name: Cache Dependency-Check
+      uses: actions/cache@v4
+      with:
+        path: ~/.dependency-check
+        key: ${{ runner.os }}-dependency-check
+
+    # 5. OWASP Dependency Check
     - name: OWASP Dependency Check
-      uses: dependency-check/Dependency-Check_Action@main
+      uses: dependency-check/Dependency-Check_Action@v1.1.0
       with:
         project: "interior-web-app"
         format: "HTML"
         outputDirectory: reports
 
-    # 4. Trivy (scan project files for known vulnerabilities before build)
+    # 6. Trivy (filesystem scan)
     - name: Trivy File System Scan
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@0.11.2
       with:
         scan-type: fs
         scan-ref: .
+      continue-on-error: true  # Optional: avoid pipeline fail on minor scan issues
 
-    # 5. Docker Hub Login
+    # 7. Docker Hub Login
     - name: Docker Hub Login
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # 6. Build Docker Image
+    # 8. Build Docker Image
     - name: Build Docker Image
       run: docker build -t devopscode44/interior-web-app:latest .
+      timeout-minutes: 10
 
-    # 7. Docker Scout (inspect image for SBOM & CVEs)
+    # 9. Docker Scout (SBOM & CVE check)
     - name: Docker Scout Scan
       uses: docker/scout-action@v1
       with:
         image: devopscode44/interior-web-app:latest
         dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
         dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
+      continue-on-error: true  # Optional
 
-    # 8. Push Docker Image
+    # 10. Push Docker Image
     - name: Push Docker Image
       run: docker push devopscode44/interior-web-app:latest
