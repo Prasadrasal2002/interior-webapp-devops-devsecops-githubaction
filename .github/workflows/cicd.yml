@@ -17,14 +17,14 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v3
 
-    # 2. Cache SonarQube
+    # 2. Cache SonarQube Scanner
     - name: Cache SonarQube Scanner
       uses: actions/cache@v4
       with:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
 
-    # 3. SonarQube (static code analysis)
+    # 3. SonarQube Scan
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v1.1.0
       env:
@@ -38,21 +38,21 @@ jobs:
         path: ~/.dependency-check
         key: ${{ runner.os }}-dependency-check
 
-    # 5. OWASP Dependency Check
+    # 5. OWASP Dependency Check (valid version)
     - name: OWASP Dependency Check
-      uses: dependency-check/Dependency-Check_Action@v1.1.0
+      uses: dependency-check/Dependency-Check_Action@main
       with:
         project: "interior-web-app"
         format: "HTML"
         outputDirectory: reports
 
-    # 6. Trivy (filesystem scan)
+    # 6. Trivy File System Scan
     - name: Trivy File System Scan
       uses: aquasecurity/trivy-action@0.11.2
       with:
         scan-type: fs
         scan-ref: .
-      continue-on-error: true  # Optional: avoid pipeline fail on minor scan issues
+      continue-on-error: true  # Optional: avoid fail on minor issues
 
     # 7. Docker Hub Login
     - name: Docker Hub Login
@@ -66,14 +66,14 @@ jobs:
       run: docker build -t devopscode44/interior-web-app:latest .
       timeout-minutes: 10
 
-    # 9. Docker Scout (SBOM & CVE check)
+    # 9. Docker Scout Scan
     - name: Docker Scout Scan
       uses: docker/scout-action@v1
       with:
         image: devopscode44/interior-web-app:latest
         dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
         dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
-      continue-on-error: true  # Optional
+      continue-on-error: true  # Optional: non-blocking CVE report
 
     # 10. Push Docker Image
     - name: Push Docker Image
