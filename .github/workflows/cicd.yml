@@ -72,7 +72,7 @@ jobs:
           --out ./reports \
           --disableAssembly
 
-    # ✅ 8. Upload Dependency Check Report using updated v4
+    # 8. Upload Dependency Check Report
     - name: Upload Dependency Check Report
       uses: actions/upload-artifact@v4
       with:
@@ -104,7 +104,7 @@ jobs:
     - name: Build Docker Image
       run: docker build -t devopscode44/interior-web-app:latest .
 
-    # 13. Docker Scout Scan (with command)
+    # 13. Docker Scout Scan
     - name: Docker Scout Scan
       uses: docker/scout-action@v1
       with:
@@ -121,3 +121,36 @@ jobs:
     # 14. Push Docker Image
     - name: Push Docker Image
       run: docker push devopscode44/interior-web-app:latest
+
+    # 15. Checkout Helm chart branch
+    - name: Checkout Helm chart
+      uses: actions/checkout@v3
+      with:
+        ref: feature/helm-chart-setup
+
+    # 16. Configure AWS credentials for EKS
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
+
+    # 17. Update kubeconfig to connect to EKS
+    - name: Update kubeconfig for EKS
+      run: aws eks update-kubeconfig --region ap-south-1 --name interior-app-eks
+
+    # 18. Install Helm
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: v3.14.0
+
+    # 19. Deploy using Helm
+    - name: Deploy using Helm to EKS
+      run: |
+        helm upgrade --install interior-web-app ./helm \
+          --namespace default \
+          --create-namespace \
+          --set image.repository=devopscode44/interior-web-app \
+          --set image.tag=latest
