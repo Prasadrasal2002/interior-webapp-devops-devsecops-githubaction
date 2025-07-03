@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - feature/*
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-and-scan:
@@ -12,11 +15,11 @@ jobs:
     timeout-minutes: 30
 
     steps:
-    # 1. Checkout code
+    # 1. Checkout current branch (main or feature/*)
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. Set up Java 17 (required by SonarScanner CLI)
+    # 2. Set up Java 17
     - name: Set up Java 17
       uses: actions/setup-java@v3
       with:
@@ -30,7 +33,7 @@ jobs:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
 
-    # 4. Download and run SonarScanner CLI manually
+    # 4. Run SonarCloud scan
     - name: Run SonarCloud Scan Manually
       run: |
         wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
@@ -46,7 +49,7 @@ jobs:
         path: ~/.dependency-check
         key: ${{ runner.os }}-dependency-check
 
-    # 6. OWASP Dependency Check (with JAVA_HOME fix)
+    # 6. OWASP Dependency Check
     - name: OWASP Dependency Check
       uses: dependency-check/Dependency-Check_Action@main
       with:
@@ -56,7 +59,7 @@ jobs:
       env:
         JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.15-6/x64
 
-    # 7. Trivy File System Scan
+    # 7. Trivy Scan
     - name: Trivy File System Scan
       uses: aquasecurity/trivy-action@0.11.2
       with:
@@ -64,18 +67,24 @@ jobs:
         scan-ref: .
       continue-on-error: true
 
-    # 8. Docker Hub Login
+    # 🔁 8. Checkout `feature/docker-setup` before Docker steps
+    - name: Checkout Dockerfile branch
+      uses: actions/checkout@v3
+      with:
+        ref: feature/docker-setup
+
+    # 9. Docker Hub Login
     - name: Docker Hub Login
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # 9. Build Docker Image
+    # 10. Build Docker Image
     - name: Build Docker Image
       run: docker build -t devopscode44/interior-web-app:latest .
 
-    # 10. Docker Scout Scan
+    # 11. Docker Scout Scan
     - name: Docker Scout Scan
       uses: docker/scout-action@v1
       with:
@@ -84,6 +93,6 @@ jobs:
         dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
       continue-on-error: true
 
-    # 11. Push Docker Image
+    # 12. Push Docker Image
     - name: Push Docker Image
       run: docker push devopscode44/interior-web-app:latest
