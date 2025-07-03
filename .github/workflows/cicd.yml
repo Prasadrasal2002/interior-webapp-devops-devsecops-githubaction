@@ -16,7 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. Set up Java 17 (for SonarCloud)
+    # 2. Set up Java 17 (required by SonarScanner CLI)
     - name: Set up Java 17
       uses: actions/setup-java@v3
       with:
@@ -30,11 +30,14 @@ jobs:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
 
-    # 4. Run SonarCloud scan
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    # 4. Download and run SonarScanner CLI manually
+    - name: Run SonarCloud Scan Manually
+      run: |
+        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+        unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+        mv sonar-scanner-5.0.1.3006-linux sonar-scanner
+        export PATH=$(pwd)/sonar-scanner/bin:$PATH
+        sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
     # 5. Cache OWASP Dependency-Check
     - name: Cache Dependency-Check
@@ -51,13 +54,13 @@ jobs:
         format: "HTML"
         outputDirectory: reports
 
-    # 7. Trivy scan
+    # 7. Trivy File System Scan
     - name: Trivy File System Scan
       uses: aquasecurity/trivy-action@0.11.2
       with:
         scan-type: fs
         scan-ref: .
-      continue-on-error: true
+      continue-on-error: true  # Optional: continue even if issues found
 
     # 8. Docker Hub Login
     - name: Docker Hub Login
@@ -77,7 +80,7 @@ jobs:
         image: devopscode44/interior-web-app:latest
         dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
         dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
-      continue-on-error: true
+      continue-on-error: true  # Optional: don't fail on CVEs
 
     # 11. Push Docker Image
     - name: Push Docker Image
