@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline with Quality and Security Checks
 
 on:
   push:
@@ -9,50 +9,54 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: [ self-hosted ]  # EC2 self-hosted runner
+    runs-on: [self-hosted]
 
     steps:
-      # 1. Checkout code
-      - name: Checkout source code
-        uses: actions/checkout@v3
-        with:
-          ref: feature/docker-setup
+    # 1. Checkout source code
+    - name: Checkout Source Code
+      uses: actions/checkout@v3
 
-      # 2. Docker login
-      - name: Docker Hub Login
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+    # 2. SonarQube (static code analysis)
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      # 3. Build Docker image
-      - name: Build Docker Image
-        run: docker build -t devopscode44/interior-web-app:latest .
+    # 3. OWASP Dependency Check (vulnerable dependencies)
+    - name: OWASP Dependency Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: "interior-web-app"
+        format: "HTML"
+        outputDirectory: reports
 
-      # 4. Push Docker image to Docker Hub
-      - name: Push Docker Image
-        run: docker push devopscode44/interior-web-app:latest
+    # 4. Trivy (scan project files for known vulnerabilities before build)
+    - name: Trivy File System Scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: fs
+        scan-ref: .
 
-      # 5. Checkout Kubernetes deployment manifests
-      - name: Checkout k8s manifests
-        uses: actions/checkout@v3
-        with:
-          ref: feature/k8s-deployment  # or same branch if combined
+    # 5. Docker Hub Login
+    - name: Docker Hub Login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 6. Configure AWS credentials for EKS
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+    # 6. Build Docker Image
+    - name: Build Docker Image
+      run: docker build -t devopscode44/interior-web-app:latest .
 
-      # 7. Update kubeconfig to connect to EKS cluster
-      - name: Setup kubeconfig for EKS
-        run: |
-          aws eks update-kubeconfig --name interior-app-eks --region ap-south-1
+    # 7. Docker Scout (inspect image for SBOM & CVEs)
+    - name: Docker Scout Scan
+      uses: docker/scout-action@v1
+      with:
+        image: devopscode44/interior-web-app:latest
+        dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
+        dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 8. Apply Kubernetes manifests
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f ./k8s/
+    # 8. Push Docker Image
+    - name: Push Docker Image
+      run: docker push devopscode44/interior-web-app:latest
