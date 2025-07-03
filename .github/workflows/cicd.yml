@@ -5,9 +5,6 @@ on:
     branches:
       - main
       - feature/*
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build-and-scan:
@@ -15,7 +12,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-    # 1. Checkout current branch (main or feature/*)
+    # 1. Checkout code
     - name: Checkout code
       uses: actions/checkout@v3
 
@@ -33,14 +30,16 @@ jobs:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
 
-    # 4. Run SonarCloud scan
-    - name: Run SonarCloud Scan Manually
+    # 4. Run SonarCloud Scan Manually
+    - name: SonarCloud Analysis
       run: |
         wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
         unzip sonar-scanner-cli-5.0.1.3006-linux.zip
         mv sonar-scanner-5.0.1.3006-linux sonar-scanner
         export PATH=$(pwd)/sonar-scanner/bin:$PATH
         sonar-scanner -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     # 5. Cache OWASP Dependency-Check
     - name: Cache Dependency-Check
@@ -59,7 +58,7 @@ jobs:
       env:
         JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.15-6/x64
 
-    # 7. Trivy Scan
+    # 7. Trivy File System Scan
     - name: Trivy File System Scan
       uses: aquasecurity/trivy-action@0.11.2
       with:
@@ -67,7 +66,7 @@ jobs:
         scan-ref: .
       continue-on-error: true
 
-    # 🔁 8. Checkout `feature/docker-setup` before Docker steps
+    # 8. Checkout docker branch before build
     - name: Checkout Dockerfile branch
       uses: actions/checkout@v3
       with:
