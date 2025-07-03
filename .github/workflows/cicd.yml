@@ -59,7 +59,7 @@ jobs:
         path: ~/.dependency-check
         key: ${{ runner.os }}-dependency-check
 
-    # 7. Run OWASP Dependency-Check via CLI (HTML report suppressed error)
+    # 7. Run OWASP Dependency-Check (without HTML to avoid crash)
     - name: OWASP Dependency Check
       run: |
         wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
@@ -74,7 +74,7 @@ jobs:
 
     # 8. Upload Dependency Check Report
     - name: Upload Dependency Check Report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: dependency-check-report
         path: ./reports
@@ -91,7 +91,7 @@ jobs:
     - name: Checkout Dockerfile branch
       uses: actions/checkout@v3
       with:
-        ref: feature/docker-setup
+        ref: feature/docker-setup  # Change this if your Dockerfile is in a different branch
 
     # 11. Docker Hub Login
     - name: Docker Hub Login
@@ -104,13 +104,18 @@ jobs:
     - name: Build Docker Image
       run: docker build -t devopscode44/interior-web-app:latest .
 
-    # 13. Docker Scout Scan
+    # 13. Docker Scout Scan (with required command input)
     - name: Docker Scout Scan
       uses: docker/scout-action@v1
       with:
         image: devopscode44/interior-web-app:latest
+        command: cves
         dockerhub-user: ${{ secrets.DOCKER_USERNAME }}
         dockerhub-password: ${{ secrets.DOCKER_PASSWORD }}
+        summary: true
+        format: json
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        write-comment: true
       continue-on-error: true
 
     # 14. Push Docker Image
