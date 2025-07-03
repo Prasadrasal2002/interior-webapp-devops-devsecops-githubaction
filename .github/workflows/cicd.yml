@@ -59,7 +59,7 @@ jobs:
         path: ~/.dependency-check
         key: ${{ runner.os }}-dependency-check
 
-    # 7. Run OWASP Dependency-Check (without HTML to avoid crash)
+    # 7. Run OWASP Dependency-Check
     - name: OWASP Dependency Check
       run: |
         wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
@@ -72,9 +72,9 @@ jobs:
           --out ./reports \
           --disableAssembly
 
-    # 8. Upload Dependency Check Report
+    # ✅ 8. Upload Dependency Check Report using updated v4
     - name: Upload Dependency Check Report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dependency-check-report
         path: ./reports
@@ -91,7 +91,7 @@ jobs:
     - name: Checkout Dockerfile branch
       uses: actions/checkout@v3
       with:
-        ref: feature/docker-setup  # Change this if your Dockerfile is in a different branch
+        ref: feature/docker-setup
 
     # 11. Docker Hub Login
     - name: Docker Hub Login
@@ -104,7 +104,7 @@ jobs:
     - name: Build Docker Image
       run: docker build -t devopscode44/interior-web-app:latest .
 
-    # 13. Docker Scout Scan (with required command input)
+    # 13. Docker Scout Scan (with command)
     - name: Docker Scout Scan
       uses: docker/scout-action@v1
       with:
