@@ -22,7 +22,7 @@ jobs:
     - name: Install unzip
       run: sudo apt-get update && sudo apt-get install -y unzip
 
-    # 3. Set up Java 17 for SonarScanner
+    # 3. Set up Java 17 for SonarScanner & Dependency-Check
     - name: Set up Java 17
       uses: actions/setup-java@v3
       with:
@@ -38,6 +38,8 @@ jobs:
 
     # 5. Run SonarCloud Scan
     - name: Run SonarCloud Scan
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
         unzip sonar-scanner-cli-5.0.1.3006-linux.zip
@@ -48,7 +50,7 @@ jobs:
           -Dsonar.organization=prasadrasal2002 \
           -Dsonar.sources=. \
           -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.login=${SONAR_TOKEN}
 
     # 6. Cache OWASP Dependency-Check data
     - name: Cache Dependency-Check
@@ -57,12 +59,17 @@ jobs:
         path: ~/.dependency-check
         key: ${{ runner.os }}-dependency-check
 
-    # 7. Run OWASP Dependency-Check (without 'outputDirectory')
+    # 7. Run OWASP Dependency-Check using CLI instead (more reliable)
     - name: OWASP Dependency Check
-      uses: dependency-check/Dependency-Check_Action@main
-      with:
-        project: "interior-web-app"
-        format: "HTML"
+      run: |
+        wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
+        unzip dependency-check-8.4.0-release.zip -d dc
+        chmod +x dc/dependency-check/bin/dependency-check.sh
+        ./dc/dependency-check/bin/dependency-check.sh \
+          --project "interior-web-app" \
+          --scan . \
+          --format "HTML" \
+          --out ./reports
 
     # 8. Trivy File System Scan
     - name: Trivy File System Scan
@@ -72,11 +79,11 @@ jobs:
         scan-ref: .
       continue-on-error: true
 
-    # 9. Checkout branch again for Dockerfile (if created in different branch)
+    # 9. Checkout Dockerfile branch
     - name: Checkout Dockerfile branch
       uses: actions/checkout@v3
       with:
-        ref: feature/docker-setup  # 👈 Modify if your branch name changes
+        ref: feature/docker-setup  # Change if your Dockerfile is in another branch
 
     # 10. Docker Hub Login
     - name: Docker Hub Login
