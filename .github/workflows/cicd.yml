@@ -11,21 +11,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Set up Java 17 (required for SonarScanner)
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      # 3. Cache SonarCloud packages
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
 
+      # 4. Install SonarScanner CLI
       - name: Install SonarScanner
         run: |
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
@@ -33,13 +37,9 @@ jobs:
           mv sonar-scanner-5.0.1.3006-linux sonar-scanner
           echo "$(pwd)/sonar-scanner/bin" >> $GITHUB_PATH
 
+      # 5. Run SonarScanner using your sonar-project.properties
       - name: Run SonarScanner
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          sonar-scanner \
-            -Dsonar.projectKey=Prasadrasal2002_interior-web-app \
-            -Dsonar.organization=Prasadrasal2002 \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${SONAR_TOKEN}
+          sonar-scanner -Dsonar.login=${SONAR_TOKEN}
