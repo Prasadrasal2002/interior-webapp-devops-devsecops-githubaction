@@ -17,7 +17,7 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v3
 
-      # 2. Set up JDK 17 for SonarQube
+      # 2. Set up JDK 17 (for rest of tools that depend on it)
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
@@ -31,9 +31,11 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
 
-      # 4. SonarQube Code Quality Scan
-      - name: SonarQube Scan
+      # 4. SonarQube Code Quality Scan using CLI v5+ (uses Java 17)
+      - name: SonarQube Scan (Java 17 Compatible)
         uses: sonarsource/sonarqube-scan-action@v1.1.0
+        with:
+          cli-version: '5.0.1.3006'  # Forces newer scanner built for Java 17
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -59,7 +61,7 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
-        continue-on-error: true  # Allow pipeline to proceed on minor CVEs
+        continue-on-error: true
 
       # 8. Docker Hub Login
       - name: Docker Hub Login
