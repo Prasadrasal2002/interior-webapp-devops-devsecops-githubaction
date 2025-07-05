@@ -13,7 +13,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 80
   targetPort: 5000
 
@@ -24,26 +24,13 @@ ingress:
     kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/group.name: "flask-alb-group"
-    alb.ingress.kubernetes.io/ssl-redirect: "443"
-    alb.ingress.kubernetes.io/load-balancer-attributes: deletion_protection.enabled=true
-    # If using ACM manually, set this; otherwise cert-manager handles cert
-    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:123456789012:certificate/abcd-efgh
-    cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
     - host: flask-app.k8s-monitori-grafana-fe0360770d-c4344f89a017f057.elb.ap-south-1.amazonaws.com.nip.io
       paths:
         - path: /
           pathType: Prefix
-  tls:
-    - secretName: flask-tls
-      hosts:
-       - flask-app.k8s-monitori-grafana-fe0360770d-c4344f89a017f057.elb.ap-south-1.amazonaws.com.nip.io
-
-certManager:
-  enabled: true
-  email: rasalprasad2002@gmail.com
 
 resources:
   limits:
@@ -68,6 +55,7 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 5
   targetCPUUtilizationPercentage: 50
+  targetMemoryUtilizationPercentage: 60
 
 volumes: []
 volumeMounts: []
