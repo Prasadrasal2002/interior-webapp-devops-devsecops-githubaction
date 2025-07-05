@@ -141,16 +141,28 @@ jobs:
       run: aws eks update-kubeconfig --region ap-south-1 --name interior-app-eks
 
     # 18. Install Helm
-    - name: Install Helm
-      uses: azure/setup-helm@v3
-      with:
-        version: v3.14.0
-
-    # 19. Deploy using Helm
-    - name: Deploy using Helm to EKS
+    - name: Deploy using Helm (without host override)
       run: |
-        helm upgrade --install interior-web-app ./helm \
+        helm upgrade --install flask-app ./flask-app \
           --namespace default \
-          --create-namespace \
-          --set image.repository=devopscode44/interior-web-app \
-          --set image.tag=latest
+          --create-namespace
+
+    - name: Wait for ALB Ingress DNS to be assigned
+      run: |
+        echo "Waiting for ALB hostname..."
+        for i in {1..30}; do
+          DNS=$(kubectl get ingress flask-app -n default -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+          if [[ "$DNS" != "" ]]; then
+            echo "ALB DNS: $DNS"
+            echo "DNS=$DNS" >> $GITHUB_ENV
+            break
+          fi
+          echo "Waiting... ($i)"
+          sleep 10
+        done
+
+    - name: Patch Ingress with .nip.io DNS
+      run: |
+        kubectl patch ingress flask-app -n default \
+          --type=json \
+          -p='[{"op": "replace", "path": "/spec/rules/0/host", "value": "flask-app.${{ env.DNS }}.nip.io"}]'
