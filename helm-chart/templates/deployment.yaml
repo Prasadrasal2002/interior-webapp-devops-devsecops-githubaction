@@ -3,16 +3,19 @@ kind: Deployment
 metadata:
   name: {{ include "flask-app.fullname" . }}
   labels:
-    app: {{ include "flask-app.name" . }}
+    app.kubernetes.io/name: {{ include "flask-app.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "flask-app.name" . }}
+      app.kubernetes.io/name: {{ include "flask-app.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "flask-app.name" . }}
+        app.kubernetes.io/name: {{ include "flask-app.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
         - name: flask-container
