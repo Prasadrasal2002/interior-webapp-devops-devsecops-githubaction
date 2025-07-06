@@ -11,7 +11,8 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
   rules:
-    - host: flask-app.<your-alb-dns>.nip.io
+  
+    - host: flask-app.k8s-monitori-grafana-fe0360770d-c4344f89a017f057.elb.ap-south-1.amazonaws.com.nip.io
       http:
         paths:
           - path: /
