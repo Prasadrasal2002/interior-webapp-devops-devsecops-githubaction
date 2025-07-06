@@ -1,24 +1,23 @@
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: flask-app
+  name: {{ .Release.Name }}
   namespace: default
   annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/group.name: flask-alb-group
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.className }}
   rules:
-  
-    - host: flask-app.k8s-monitori-grafana-fe0360770d-c4344f89a017f057.elb.ap-south-1.amazonaws.com.nip.io
-      http:
+    - http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: flask-app
+                name: {{ $.Values.service.name | default $.Release.Name }}
                 port:
-                  number: 80
+                  number: {{ $.Values.service.port }}
+{{- end }}
