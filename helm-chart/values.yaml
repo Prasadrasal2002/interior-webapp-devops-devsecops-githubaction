@@ -13,7 +13,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 service:
-  type: NodePort
+  name: flask-app
+  type: ClusterIP
   port: 80
   targetPort: 5000
 
@@ -21,16 +22,14 @@ ingress:
   enabled: true
   className: alb
   annotations:
-    kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/group.name: "flask-alb-group"
-  hosts:
-    - host: flask-app.k8s-flaskalbgroup-7e4ab08864-1098053488.ap-south-1.elb.ap-south-1.amazonaws.com.nip.io
-      paths:
-        - path: /
-          pathType: Prefix
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-port: "5000"
+    alb.ingress.kubernetes.io/success-codes: "200"
+    alb.ingress.kubernetes.io/subnets: subnet-0509391405e0c7963,subnet-0c65b98d0eec341d8
 
 resources:
   limits:
