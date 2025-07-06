@@ -21,5 +21,5 @@ COPY . .
 # Expose the port your Flask app runs on
 EXPOSE 5000
 # Run the Flask app
-CMD ["python", "run.py"]
+CMD ["python3", "run.py"]
 
