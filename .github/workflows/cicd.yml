@@ -7,7 +7,7 @@ on:
       - feature/*
 
 jobs:
-  build-and-scan:
+  build-and-deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -15,29 +15,27 @@ jobs:
     # 1. Checkout source code
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-        ref: ${{ github.ref_name }}
 
     # 2. Install unzip
     - name: Install unzip
       run: sudo apt-get update && sudo apt-get install -y unzip
 
-    # 3. Set up Java 17
-    - name: Set up Java 17
+    # 3. Set up Java 17 (for SonarScanner and OWASP)
+    - name: Set up Java
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    # 4. Cache SonarCloud scanner
+    # 4. Cache SonarCloud packages
     - name: Cache SonarCloud packages
       uses: actions/cache@v4
       with:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
 
-    # 5. Run SonarCloud Scan
-    - name: Run SonarCloud Scan
+    # 5. SonarCloud Static Code Analysis
+    - name: SonarCloud Scan
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
@@ -52,14 +50,7 @@ jobs:
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=${SONAR_TOKEN}
 
-    # 6. Cache OWASP Dependency-Check data
-    - name: Cache Dependency-Check
-      uses: actions/cache@v4
-      with:
-        path: ~/.dependency-check
-        key: ${{ runner.os }}-dependency-check
-
-    # 7. Run OWASP Dependency-Check
+    # 6. OWASP Dependency Check
     - name: OWASP Dependency Check
       run: |
         wget https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.0/dependency-check-8.4.0-release.zip
@@ -68,18 +59,17 @@ jobs:
         ./dc/dependency-check/bin/dependency-check.sh \
           --project "interior-web-app" \
           --scan . \
-          --format "XML" \
+          --format "HTML" \
           --out ./reports \
           --disableAssembly
 
-    # 8. Upload Dependency Check Report
-    - name: Upload Dependency Check Report
+    - name: Upload OWASP Report
       uses: actions/upload-artifact@v4
       with:
-        name: dependency-check-report
+        name: owasp-report
         path: ./reports
 
-    # 9. Trivy File System Scan
+    # 7. Trivy Vulnerability Scanner (File System Scan)
     - name: Trivy File System Scan
       uses: aquasecurity/trivy-action@0.11.2
       with:
@@ -87,24 +77,18 @@ jobs:
         scan-ref: .
       continue-on-error: true
 
-    # 10. Checkout Dockerfile branch
-    - name: Checkout Dockerfile branch
-      uses: actions/checkout@v3
-      with:
-        ref: feature/docker-setup
-
-    # 11. Docker Hub Login
+    # 8. Docker Hub Login
     - name: Docker Hub Login
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # 12. Build Docker Image
+    # 9. Docker Build
     - name: Build Docker Image
       run: docker build -t devopscode44/interior-web-app:latest .
 
-    # 13. Docker Scout Scan
+    # 10. Docker Scout (SBOM & CVEs)
     - name: Docker Scout Scan
       uses: docker/scout-action@v1
       with:
@@ -118,17 +102,17 @@ jobs:
         write-comment: true
       continue-on-error: true
 
-    # 14. Push Docker Image
+    # 11. Docker Push
     - name: Push Docker Image
       run: docker push devopscode44/interior-web-app:latest
 
-    # 15. Checkout Helm chart branch
-    - name: Checkout Helm chart
+    # 12. Checkout Helm Chart
+    - name: Checkout Helm Chart
       uses: actions/checkout@v3
       with:
         ref: feature/helm-chart-setup
 
-    # 16. Configure AWS credentials for EKS
+    # 13. Configure AWS Credentials
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -136,33 +120,34 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-south-1
 
-    # 17. Update kubeconfig to connect to EKS
-    - name: Update kubeconfig for EKS
+    # 14. Update kubeconfig to connect to EKS
+    - name: Update kubeconfig
       run: aws eks update-kubeconfig --region ap-south-1 --name interior-app-eks
 
-    # 18. Install Helm
-    - name: Deploy using Helm (without host override)
+    # 15. Helm Deploy
+    - name: Deploy to EKS using Helm
       run: |
         helm upgrade --install flask-app ./flask-app \
           --namespace default \
-          --create-namespace
+          --create-namespace \
+          --values ./flask-app/values.yaml
 
-    - name: Wait for ALB Ingress DNS to be assigned
+    # 16. Wait for ALB DNS (Ingress)
+    - name: Wait for ALB Ingress DNS
       run: |
-        echo "Waiting for ALB hostname..."
+        echo "Waiting for ALB DNS..."
         for i in {1..30}; do
           DNS=$(kubectl get ingress flask-app -n default -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
           if [[ "$DNS" != "" ]]; then
-            echo "ALB DNS: $DNS"
             echo "DNS=$DNS" >> $GITHUB_ENV
+            echo "Found DNS: $DNS"
             break
           fi
-          echo "Waiting... ($i)"
           sleep 10
         done
 
-    - name: Patch Ingress with .nip.io DNS
+    # 17. Patch DNS using .nip.io
+    - name: Patch Ingress DNS
       run: |
-        kubectl patch ingress flask-app -n default \
-          --type=json \
-          -p='[{"op": "replace", "path": "/spec/rules/0/host", "value": "flask-app.${{ env.DNS }}.nip.io"}]'
+        kubectl patch ingress flask-app -n default --type=json \
+        -p='[{"op": "replace", "path": "/spec/rules/0/host", "value": "flask-app.${{ env.DNS }}.nip.io"}]'
