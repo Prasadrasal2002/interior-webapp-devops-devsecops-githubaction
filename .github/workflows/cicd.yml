@@ -156,7 +156,7 @@ jobs:
 
     - name: Print Access URL
       run: |
-        echo "✅ App deployed at: https://flask-app.${{ env.DNS }}.nip.io"
+        echo "App deployed at: https://flask-app.${{ env.DNS }}.nip.io"
 
     - name: Save DNS URL as artifact
       run: echo "https://flask-app.${{ env.DNS }}.nip.io" > app-url.txt
