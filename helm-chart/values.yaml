@@ -27,7 +27,7 @@ ingress:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/group.name: "flask-alb-group"
   hosts:
-    - host: flask-app.k8s-flaskalbgroup-7e4ab08864-1098053488.ap-south-1.elb.amazonaws.com.nip.io
+    - host: flask-app.k8s-flaskalbgroup-7e4ab08864-1098053488.ap-south-1.elb.ap-south-1.amazonaws.com.nip.io
       paths:
         - path: /
           pathType: Prefix
