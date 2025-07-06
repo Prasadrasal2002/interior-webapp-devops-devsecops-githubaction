@@ -5,5 +5,5 @@ metadata:
   labels:
     {{- include "flask-app.labels" . | nindent 4 }}
 data:
-  FLASK_ENV: {{ .Values.env.FLASK_ENV | quote }}
-  LOG_LEVEL: {{ .Values.env.LOG_LEVEL | quote }}
+  FLASK_ENV: {{ .Values.configMap.env | quote }}
+  LOG_LEVEL: {{ .Values.configMap.logLevel | quote }}
