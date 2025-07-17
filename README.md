@@ -1,23 +1,43 @@
-# PHASE 1
+# 📌 Project Overview
 
-
-
-
-
-# 🏠 InteriorDesignPro
-
-This is a modern web application built to showcase interior designs and services. The project includes both frontend and backend components, with an integrated **DevOps workflow** for **CI/CD** and **version control**.
+This is a modern web application built to showcase interior designs and services. The project includes both frontend and backend components, integrated with a complete **DevOps workflow** for **CI/CD**, **monitoring**, and **cloud-native infrastructure management**.
 
 ---
 
-## 📖 Overview
+### 🛠️ Tech Stack Used
 
-**InteriorDesignPro** is designed for interior designers and design studios to present their work in a clean and engaging format. It features:
+#### 🧑‍💻 Frontend & Backend
+- **Frontend**: HTML, CSS, JavaScript  
+- **Backend**: Node.js / Express *(if applicable)*  
+- **Version Control**: Git, GitHub  
 
-- A stylish homepage with hero and CTA sections.
-- About and Project pages to explain expertise.
-- Contact page with form submission.
-- Responsive UI with elegant styling and modern layout.
+#### ⚙️ CI/CD & DevOps
+- **CI/CD**: GitHub Actions  
+- **EC2 as a Self-hosted Runner** for pipeline execution  
+- **Containerization**: Docker  
+- **Infrastructure as Code**: Terraform *(if used)*  
+
+#### ☁️ AWS Cloud Services
+- **EC2** – For self-hosted GitHub runner  
+- **S3** – Hosting static files/images  
+- **DynamoDB** – NoSQL data storage  
+- **VPC** – Isolated networking setup  
+- **CloudWatch** – Monitoring and alerting  
+- **ALB Ingress Controller** – Managing external access to Kubernetes services via AWS Application Load Balancer
+
+#### 🧵 Kubernetes & Orchestration
+- **Kubernetes** – Application orchestration  
+- **Helm & Helm Charts** – For packaging and deploying Kubernetes resources  
+- **ALB Ingress Controller** – For scalable, production-grade routing with AWS ALB  
+
+#### 🔍 Monitoring & Security
+- **Loki** – Centralized log aggregation
+- **Promtail** – Log shipping agent used with Loki to collect logs from Kubernetes pods
+- **CloudWatch** – AWS-native monitoring and alerting
+- **Prometheus & Grafana** – Metrics collection and dashboard visualization *(if used)*
+- **SonarQube** – Code quality and static analysis
+- **Trivy** – Container vulnerability scanning
+- **Docker Scout** – Security insights and image analysis
 
 ---
 
