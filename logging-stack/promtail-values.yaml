@@ -1,0 +1,6 @@
+config:
+  clients:
+    - url: http://loki:3100/loki/api/v1/push
+  snippets:
+    pipeline_stages:
+      - docker: {}
