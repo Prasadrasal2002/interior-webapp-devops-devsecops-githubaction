@@ -6,7 +6,7 @@
 
 # 🏠 InteriorDesignPro
 
-A modern and elegant web application for showcasing interior design projects. Built using **Flask**, **HTML/CSS**, and **Bootstrap**, this app allows users to explore featured projects, learn about services, and get in touch via a contact form.
+This is a modern web application built to showcase interior designs and services. The project includes both frontend and backend components, with an integrated **DevOps workflow**for **CI/CD** and **version control**.
 
 ---
 
@@ -1522,12 +1522,7 @@ Select Data Sources > Add data source. > Choose data source (e.g., Prometheus). 
 
 ---
 
-## 🤝 Contributing
+## 👨‍💻 Author
 
-Contributions are welcome! Please follow these steps:
-
-1. Fork this repository.
-2. Create a new branch (`feature-branch`).
-3. Make your changes and commit (`git commit -m 'Add new feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Open a pull request.
+This project is maintained by [Prasad Rasal](https://github.com/rasalprasad2002).  
+Feel free to check out my other work or get in touch!
