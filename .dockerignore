@@ -4,8 +4,6 @@ venv/
 # Ignore Python cache
 __pycache__/
 *.pyc
-
-*.pdf
 *.md
 .env
 .git
