@@ -6,7 +6,7 @@
 
 # 🏠 InteriorDesignPro
 
-This is a modern web application built to showcase interior designs and services. The project includes both frontend and backend components, with an integrated **DevOps workflow**for **CI/CD** and **version control**.
+This is a modern web application built to showcase interior designs and services. The project includes both frontend and backend components, with an integrated **DevOps workflow** for **CI/CD** and **version control**.
 
 ---
 
